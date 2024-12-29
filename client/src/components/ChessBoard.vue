@@ -1,8 +1,19 @@
 <script setup>
     import { ref } from "vue";
-    import { GenerateBoardSquares, GetSquareColor } from "../utils/chessutils";
+    import { 
+        GenerateBoardSquares,
+        GetSquareColor,
+        InitBoardState,
+        PieceMap,
+    } from "../utils/chessutils";
 
+    //const DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    const DEFAULT_FEN = "rnbqkbnr/ppp2ppp/4p3/3p4/4PP2/3P4/PPP3PP/RNBQKBNR b KQkq f3 0 1";
+
+    // FEN string
     const sq = ref(GenerateBoardSquares());
+    const BoardState = ref(InitBoardState( DEFAULT_FEN, sq.value ));
+
     const flipped = ref(false);
     console.log(sq);
 
@@ -11,14 +22,17 @@
         flipped.value = !flipped.value;
     }
 
+    // Based on current FEN string, figure out what coord has what piece
     function getPiece( square ) {
-        return "/assets/b-king.png"
+        const key = BoardState.value.boardMap[square];
+        return PieceMap[key];
     }
 
 </script>
 
 <template>
     <h1> ChessBoard </h1>
+    <h2>{{(BoardState.value && BoardState.value.whiteToMove) ? "White" : "Black"}} to move</h2>
     <button @click="flip">{{ flipped ? "Black" : "White" }} view</button>
     <div class="chessboard">
         <div 
