@@ -24,54 +24,15 @@ a:hover {
 
 body {
   margin: 0;
-  margin-top: 50px;
   display: flex;
-  /*place-items: center;*/
+  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-}
-
-#header {
-    border: 1px solid red;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 10px 0;
-    text-align: center;
-    z-index: 999;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
 
 button {
@@ -91,6 +52,17 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }
 
 @media (prefers-color-scheme: light) {

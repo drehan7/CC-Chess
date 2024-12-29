@@ -1,13 +1,7 @@
-import { sync } from "glob";
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
-export default {
-    root: "./src",
-    build: {
-        outDir: "../dist",
-        emptyOutDir: true,
-        rollupOptions: {
-            input: sync("./src/**/*.html".replace(/\\/g, "/")),
-        }
-    }
-
-}
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [vue()],
+})
