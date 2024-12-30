@@ -53,26 +53,13 @@ export function GenerateBoardFromFen( fen ) {
     // Array of coordinates -- [a1, a2 ...]
     const boardArr = GenerateBoardSquares();
 
-    let tmpFen = toUsableFen( fen );
+    const tmpFen = toUsableFen( fen );
 
     // Map coord to fen character
     const boardMap = {};
 
     for ( let i = 0; i < boardArr.length; i++ ) {
-        if (tmpFen[i] === "/") {
-            continue;
-        }
-        else if ( isCharNumber(tmpFen[i]) ) {
-            // Next N spaces are blank
-            const blankSqCount = parseInt(tmpFen[i]);
-            for ( let j = 0; j < blankSqCount; j++ ) {
-                boardMap[boardArr[i+j]] = "";
-            }
-            i += blankSqCount;
-        }
-        else {
-            boardMap[boardArr[i]] = tmpFen[i];
-        }
+        boardMap[boardArr[i]] = tmpFen[i];
     }
 
     console.log("BOARDMAP", boardMap);
@@ -109,7 +96,6 @@ export function GetSquareColor( squareKey ) {
     const color = ( coord.row % 2 == 0 ) 
         ? ( coord.col % 2 == 0 ) ? "light" : "dark"
         : ( coord.col % 2 == 0 ) ? "dark" : "light";
-
 
     return color;
 }

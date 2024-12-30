@@ -7,8 +7,8 @@
         PieceMap,
     } from "../utils/chessutils";
 
-    //const DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    const DEFAULT_FEN = "rnbqkbnr/ppp2ppp/4p3/3p4/4PP2/3P4/PPP3PP/RNBQKBNR b KQkq f3 0 1";
+    const DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    //const DEFAULT_FEN = "rnbqkbnr/ppp2ppp/4p3/3p4/4PP2/3P4/PPP3PP/RNBQKBNR b KQkq f3 0 1";
 
     // FEN string
     const sq = ref(GenerateBoardSquares());
