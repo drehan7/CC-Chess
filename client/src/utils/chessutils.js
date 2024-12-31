@@ -47,7 +47,41 @@ function DetermineTurnFromFen( fen ) {
     return turn;
 }
 
-export function GenerateFenFromBoard() {}
+export function GenerateFenFromBoard( board ) {
+    let retFen = "";
+
+    const pieces = Object.values( board );
+    let count = 0;
+
+    for ( let i = 0; i < pieces.length; i++ ) {
+        const piece = pieces[i];
+        count++;
+
+        if ( piece !== " " ) {
+            retFen += piece;
+        }
+        else {
+            let y = i;
+            let blankCount = 0;
+            while ( pieces[y] === " " ) {
+                blankCount++;
+                y++;
+                if ( (count + blankCount -1) % 8 === 0 ) {
+                    break;
+                }
+            }
+            i = y-1;
+            retFen += blankCount.toString();
+            count += blankCount - 1;
+        }
+
+        if ( count % 8 === 0 && i !== pieces.length - 1) {
+            retFen += "/";
+            count = 0;
+        }
+    }
+    return retFen;
+}
 
 export function GenerateBoardFromFen( fen ) {
     // Array of coordinates -- [a1, a2 ...]
