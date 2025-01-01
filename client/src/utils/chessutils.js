@@ -47,12 +47,12 @@ function DetermineTurnFromFen( fen ) {
     return turn;
 }
 
-export function GenerateFenFromBoard( board ) {
+function CreateFenBoardRepresentation( boardMap ) {
     let retFen = "";
-
-    const pieces = Object.values( board );
+    const pieces = Object.values( boardMap );
     let count = 0;
 
+    // Generate just board representation of fen
     for ( let i = 0; i < pieces.length; i++ ) {
         const piece = pieces[i];
         count++;
@@ -80,7 +80,39 @@ export function GenerateFenFromBoard( board ) {
             count = 0;
         }
     }
+
     return retFen;
+}
+
+function ReconstructFullFen( fenObj ) {
+    const fenSections = [ 
+        fenObj.board,
+        fenObj.turn,
+        fenObj.castling,
+        fenObj.halfMoves,
+        fenObj.fullMoves 
+    ];
+
+    const rawFen = fenSections.join(" ");
+
+    return rawFen;
+}
+
+function toggleTurn( prevTurn ) {
+    return ( prevTurn === "w" ) ? "b" : "w";
+}
+
+// Create updated FenObj from current boardstate
+export function GenerateFenFromBoard( boardState ) {
+    const updatedFenObj = boardState.fenObj;
+    updatedFenObj.board = CreateFenBoardRepresentation( boardState.boardMap );
+    updatedFenObj.turn = toggleTurn( updatedFenObj.turn );
+    updatedFenObj.fullFen = ReconstructFullFen( updatedFenObj );
+
+    // TODO: Update with chess engine
+    // For now, just maintain save move counters and castling
+
+    return updatedFenObj;
 }
 
 export function GenerateBoardFromFen( fen ) {
@@ -124,6 +156,23 @@ function convertToCoordinate(squareKey) {
     return { row: cc, col: num };
 }
 
+// Construct object describing states based off FEN
+//rnb1kbnr/pp3pp1/4p3/p2p4/1N2PP1p/3P1q2/PPP3PP/R1BQKBNR w KQkq - 0 1
+export function InitFenObject( rawFenString ) {
+    const fenDecon = rawFenString.split(" ");
+    const FenObj = {
+        fullFen: rawFenString,
+        board: fenDecon[0],
+        turn: fenDecon[1],
+        castling: fenDecon[2],
+        enPassant: fenDecon[3],
+        halfMoves: parseInt(fenDecon[4]),
+        fullMoves: parseInt(fenDecon[5]),
+    };
+
+    return FenObj;
+}
+
 // Return either "light" or "dark"
 export function GetSquareColor( squareKey ) {
     const coord = convertToCoordinate( squareKey );
@@ -139,10 +188,13 @@ export function InitBoardState( fen ) {
     // Map of board coord to fen letter;
     const boardMap = GenerateBoardFromFen(fen)
     const whiteToMove = DetermineTurnFromFen(fen) === "w";
+    const fenObj = InitFenObject( fen );
 
     const BoardState = {
-        fen,
+        fen, // DEPRECATED
+        fenObj,
         boardMap,
+        boardSquares: GenerateBoardSquares(),
         whiteToMove,
     }
 

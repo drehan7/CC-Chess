@@ -5,22 +5,20 @@
         GenerateFenFromBoard,
         GetSquareColor,
         InitBoardState,
+        InitFenObject,
         PieceMap,
     } from "../utils/chessutils";
 
     //const DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     const DEFAULT_FEN = "rnb1kbnr/pp3pp1/4p3/p2p4/1N2PP1p/3P1q2/PPP3PP/R1BQKBNR w KQkq - 0 1";
 
-    // FEN string
-    const sq = ref(GenerateBoardSquares());
-    const BoardState = reactive(InitBoardState( DEFAULT_FEN, sq.value ));
-
+    const BoardState = reactive(InitBoardState( DEFAULT_FEN ));
     let selectedSquare = ref("");
 
     const flipped = ref(false);
 
     function flip() {
-        sq.value.reverse();
+        BoardState.boardSquares.reverse();
         flipped.value = !flipped.value;
     }
 
@@ -31,20 +29,18 @@
     }
 
     function isSelected( square ) {
-        return selectedSquare === square;
+        return computed(() => (selectedSquare === square) ? "selected": "");
     }
 
     function updateFen() {
-        BoardState.fen = GenerateFenFromBoard( BoardState.boardMap );
+        BoardState.fenObj = GenerateFenFromBoard( BoardState );
     }
 
     function handleSquareClick( square ) {
         const currSquarePiece = BoardState.boardMap[square];
-        console.log(`Curr selected: ${selectedSquare.value} Clicking: ${square} Current squarepiece: ${currSquarePiece}`)
         if ( !selectedSquare.value.length ) {
             if ( currSquarePiece !== " " ) {
                 selectedSquare.value = square;
-                console.log(`Setting Selected to: ${selectedSquare}`);
                 return;
             }
         }
@@ -54,29 +50,30 @@
         BoardState.boardMap[selectedSquare.value] = " ";
         BoardState.boardMap[square] = tmp;
         selectedSquare.value = "";
-        console.log(`Setting Selected to: ${selectedSquare.value}`);
-        console.log(selectedSquare.value);
 
-        updateFen();
+        updateFen( );
     }
 
     const getCurrentSelected = computed(() => {
         return selectedSquare.value;
     })
 
+    const getCurrentFEN = computed(() => {
+        return BoardState.fenObj.fullFen;
+    })
+
 </script>
 
 <template>
     <h1> ChessBoard </h1>
-    <h2 @click="console.log(selectedSquare)">Selected Square: {{ getCurrentSelected}}</h2>
-    <h2>{{ BoardState.fen}}</h2>
-    <h2>{{ BoardState.whiteToMove}}</h2>
-    <h2>{{ BoardState.whiteToMove ? "White" : "Black"}} to move</h2>
+    <h2 @click="console.log(selectedSquare)">Selected Square: {{ getCurrentSelected || "None" }}</h2>
+    <h2>{{ BoardState.fenObj.fullFen }}</h2>
+    <h2>{{ BoardState.fenObj.turn === "w" ? "White" : "Black"}} to move</h2>
     <button @click="flip">{{ flipped ? "Black" : "White" }} view</button>
     <TransitionGroup key="board">
         <div class="chessboard" key="_board">
             <div 
-                v-for="s in sq"
+                v-for="s in BoardState.boardSquares"
                 :key="s"
                 class="square"
                 :class="GetSquareColor(s)"
@@ -85,7 +82,7 @@
                     class="piece" 
                     :src="getPiece(s)" 
                     alt=""
-                    :class="isSelected(s) ? 'selected' : ''"
+                    :class="isSelected(s)"
                 />
                 <div class="square-annotation">
                     {{s}}
