@@ -29,7 +29,7 @@
     }
 
     function isSelected( square ) {
-        return computed(() => (selectedSquare === square) ? "selected": "");
+        return ( selectedSquare.value === square ) ? "selected": "";
     }
 
     function updateFen() {
@@ -76,13 +76,12 @@
                 v-for="s in BoardState.boardSquares"
                 :key="s"
                 class="square"
-                :class="GetSquareColor(s)"
+                :class="[GetSquareColor(s), isSelected(s)]"
                 @click="handleSquareClick(s)">
                 <img 
                     class="piece" 
                     :src="getPiece(s)" 
                     alt=""
-                    :class="isSelected(s)"
                 />
                 <div class="square-annotation">
                     {{s}}
@@ -113,8 +112,8 @@
         border: 2px solid blue;
         padding: 1rem;
     }
-    .piece.selected {
-        border: 5px solid green;
+    .selected {
+        opacity: 0.5;
     }
     .square {
         display: flex;
