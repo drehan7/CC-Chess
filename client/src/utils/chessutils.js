@@ -1,6 +1,7 @@
 const CHARCODE_OFFSET = 97;
 
 export const PieceMap = {
+
     "r": "/assets/b-rook.png",
     "n": "/assets/b-knight.png",
     "b": "/assets/b-bishop.png",
@@ -19,6 +20,7 @@ export const PieceMap = {
 function isCharNumber(char) {
     return char >= '0' && char <= '9';
 }
+
 
 // Turn standard FEN to easier to use fen string
 // Convert numbers to spaces, remove slashes
@@ -200,3 +202,4 @@ export function InitBoardState( fen ) {
 
     return BoardState;
 }
+    
